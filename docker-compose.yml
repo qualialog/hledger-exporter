@@ -1,0 +1,23 @@
+services:
+  ledger_exporter:
+    ports:
+      - "9000:9000"
+    build: .
+    container_name: hledger_exporter
+    environment:
+      - PUID
+      - PGID
+      - GITEA_TOKEN
+      - GITEA_JOURNAL_URL
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/metrics"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - metrics
+
+networks:
+  metrics:
+    external: true
